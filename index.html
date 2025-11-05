@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moda Local - E-commerce de Extensão</title>
+    <!-- Carrega o Tailwind CSS para estilo e responsividade -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc; /* light gray background */
+        }
+        .product-image {
+            background-image: url('https://placehold.co/600x600/3182CE/FFFFFF?text=Imagem+da+Roupa');
+            background-size: cover;
+            background-position: center;
+        }
+        /* Custom animation for button hover */
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Cabeçalho (Navegação Intuitiva) -->
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-indigo-600">Moda Local</h1>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" class="text-gray-600 hover:text-indigo-600 font-semibold transition duration-150">Início</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 font-semibold transition duration-150">Produtos</a>
+                <a href="#promocoes" class="text-red-500 font-bold hover:text-red-700 transition duration-150">🔥 Promoções</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 font-semibold transition duration-150">Carrinho</a>
+            </nav>
+            <button class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
+                <!-- Ícone de Menu (Lucide: Menu) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal: Página de Produto -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 mt-8">
+        <section class="bg-white p-6 rounded-xl shadow-lg grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Imagem e Detalhes do Produto -->
+            <div class="space-y-6">
+                <div class="product-image h-96 w-full rounded-lg shadow-md">
+                    <!-- Placeholder de Imagem -->
+                </div>
+                <h2 class="text-3xl font-extrabold text-gray-900">Vestido Floral de Verão</h2>
+                <p class="text-indigo-600 text-4xl font-bold">R$ 129,90</p>
+                <p class="text-gray-600 leading-relaxed">
+                    Um vestido leve e confortável, perfeito para dias quentes. Tecido de alta qualidade com caimento elegante. Disponível nos tamanhos P, M e G.
+                </p>
+                <div class="flex space-x-4">
+                    <label class="block">
+                        <span class="text-gray-700 font-semibold">Tamanho:</span>
+                        <select class="mt-1 block w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2">
+                            <option>P</option>
+                            <option>M</option>
+                            <option>G</option>
+                        </select>
+                    </label>
+                    <button class="btn-primary bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 self-end">
+                        Adicionar ao Carrinho
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calculador de Frete (Transparência Logística) -->
+            <div class="bg-gray-50 p-6 rounded-xl shadow-inner space-y-6">
+                <h3 class="text-2xl font-bold text-gray-800 border-b pb-2 border-indigo-200">
+                    🚚 Simule o Frete e Prazo de Entrega
+                </h3>
+                
+                <p class="text-sm text-gray-500">
+                    Local de envio da Loja: <span class="font-bold text-indigo-600">57082-095</span>.
+                </p>
+
+                <div id="frete-message-box" class="hidden p-4 rounded-lg text-sm" role="alert"></div>
+
+                <div class="space-y-4">
+                    <label for="cep" class="block">
+                        <span class="text-gray-700 font-semibold">CEP de Destino (Apenas Números):</span>
+                        <input type="text" id="cep" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-3" placeholder="Ex: 57083000 ou 57035000" maxlength="8">
+                    </label>
+
+                    <button id="calcular-frete-btn" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition duration-300">
+                        Calcular Frete
+                    </button>
+                </div>
+
+                <!-- Resultado do Cálculo -->
+                <div id="resultado-frete" class="mt-4 p-4 border-t border-indigo-300 hidden">
+                    <p class="text-lg font-semibold text-gray-800 mb-2">Resultado da Simulação:</p>
+                    <div class="flex justify-between items-center bg-white p-3 rounded-md shadow-sm mb-2">
+                        <span class="text-gray-600">Valor do Frete:</span>
+                        <span id="valor-frete" class="text-xl font-extrabold text-indigo-600"></span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white p-3 rounded-md shadow-sm">
+                        <span class="text-gray-600">Prazo Estimado:</span>
+                        <span id="prazo-frete" class="text-xl font-extrabold text-indigo-600"></span>
+                    </div>
+                    <p class="mt-3 text-xs text-gray-500">
+                        *Cálculo simulado baseado em faixas de distância (0-12km) a partir do CEP da loja, usando a média de plataformas de moto-entrega.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Seção de Promoções e Ofertas (Visibilidade de Ofertas) -->
+        <section id="promocoes" class="mt-12 p-8 bg-red-50 rounded-xl shadow-2xl border-4 border-red-200">
+            <h3 class="text-3xl font-extrabold text-red-700 text-center mb-6">
+                🏷️ Ofertas Imperdíveis da Semana
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card de Oferta 1 -->
+                <div class="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-[1.02]">
+                    <img src="https://placehold.co/300x200/FCA5A5/FFFFFF?text=Blusa" alt="Blusa em Promoção" class="rounded-md w-full h-32 object-cover mb-3">
+                    <p class="text-lg font-semibold text-gray-900">Blusa de Algodão</p>
+                    <p class="text-sm line-through text-gray-500">De: R$ 79,90</p>
+                    <p class="text-xl font-bold text-red-600">Por: R$ 59,90</p>
+                </div>
+                <!-- Card de Oferta 2 -->
+                <div class="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-[1.02]">
+                    <img src="https://placehold.co/300x200/FCA5A5/FFFFFF?text=Calca" alt="Calça Jeans em Promoção" class="rounded-md w-full h-32 object-cover mb-3">
+                    <p class="text-lg font-semibold text-gray-900">Calça Jeans Skinny</p>
+                    <p class="text-sm line-through text-gray-500">De: R$ 189,90</p>
+                    <p class="text-xl font-bold text-red-600">Por: R$ 149,90</p>
+                </div>
+                 <!-- Card de Oferta 3 (Usando Lucide: Filter) -->
+                <div class="bg-red-600 text-white p-6 rounded-lg shadow-2xl flex flex-col justify-center items-center text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 8 22 21 2 21 2 8 12 2 22 8"/><line x1="6" x2="18" y1="13" y2="13"/><line x1="6" x2="18" y1="17" y2="17"/></svg>
+                    <p class="mt-4 text-2xl font-extrabold">Filtre por Categoria!</p>
+                    <p class="text-sm font-light">Todas as nossas ofertas separadas por seção.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="mt-12 bg-gray-800 text-white p-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; 2025 Moda Local - Protótipo de E-commerce (Projeto de Extensão)</p>
+            <p class="text-sm mt-2">Contato: (99) 99999-9999 | E-mail: contato@modalocal.com.br</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cepInput = document.getElementById('cep');
+            const calcularBtn = document.getElementById('calcular-frete-btn');
+            const resultadoDiv = document.getElementById('resultado-frete');
+            const valorSpan = document.getElementById('valor-frete');
+            const prazoSpan = document.getElementById('prazo-frete');
+            const messageBox = document.getElementById('frete-message-box');
+
+            // CEP DA LOJA (ORIGEM) - 57082-095
+            const LOJA_CEP_PREFIX = '57082';
+
+            // Mapeamento de Zonas (Simulação de Distância Geográfica)
+            // Estes CEPs simulam diferentes distâncias do 57082-095 (Maceió)
+            const ZONE_MAP = {
+                // Zona 1: Curta Distância (0-5km)
+                '57082': 1, // Mesmo prefixo (muito perto)
+                '57083': 1, // Bairro Adjacente
+                // Zona 2: Média Distância (5-12km)
+                '57072': 2, // Bairro mais afastado
+                '57035': 2, // Litoral (Ponta Verde, distante)
+                '57051': 2, // Bairro Intermediário
+            };
+
+            // Função para exibir mensagem de erro/sucesso
+            function showMessage(text, type = 'error') {
+                messageBox.textContent = text;
+                messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+                if (type === 'error') {
+                    messageBox.classList.add('bg-red-100', 'text-red-700');
+                } else {
+                    messageBox.classList.add('bg-green-100', 'text-green-700');
+                }
+            }
+            
+            // Função principal de cálculo (Simulação da Transparência Logística)
+            function calcularFrete() {
+                const cep = cepInput.value.replace(/\D/g, ''); // Remove todos os não-dígitos
+                resultadoDiv.classList.add('hidden');
+                messageBox.classList.add('hidden');
+
+                if (cep.length !== 8) {
+                    showMessage('Por favor, digite um CEP válido com 8 dígitos.', 'error');
+                    return;
+                }
+
+                // Obtém os 5 primeiros dígitos do CEP de destino
+                const destinationCepPrefix = cep.substring(0, 5);
+                
+                // Determina a zona, ou assume Zona 3 (fora do raio) se não estiver mapeado
+                const zoneId = ZONE_MAP[destinationCepPrefix] || 3;
+
+                let valorFrete;
+                let prazoEntrega;
+
+                if (zoneId === 1) {
+                    // Zona 1: Curta Distância (0-5km)
+                    // Preço: R$ 10,00 - R$ 15,00 (Média moto-entrega local)
+                    valorFrete = (10 + Math.random() * 5).toFixed(2);
+                    prazoEntrega = '1 a 2 horas (Rápida)';
+                } else if (zoneId === 2) {
+                    // Zona 2: Média Distância (5-12km)
+                    // Preço: R$ 16,00 - R$ 25,00 (Média moto-entrega)
+                    valorFrete = (16 + Math.random() * 9).toFixed(2);
+                    prazoEntrega = '2 a 3 horas (Padrão)';
+                } else {
+                    // Zona 3: Fora do Raio de 12km (Não Atendido)
+                    showMessage('Frete indisponível. O CEP está fora do raio máximo de 12km da loja (57082-095).', 'error');
+                    return;
+                }
+
+                // Exibe o resultado na tela (Transparência)
+                valorSpan.textContent = `R$ ${valorFrete.replace('.', ',')}`;
+                prazoSpan.textContent = prazoEntrega;
+                resultadoDiv.classList.remove('hidden');
+                showMessage('Cálculo realizado com sucesso! Veja o valor simulado abaixo.', 'success');
+            }
+
+            // Atribui o evento ao botão
+            calcularBtn.addEventListener('click', calcularFrete);
+
+            // Opcional: Permite calcular frete ao pressionar Enter no campo CEP
+            cepInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    calcularFrete();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
