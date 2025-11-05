@@ -12,10 +12,12 @@
             font-family: 'Inter', sans-serif;
             /* Cor Nude Bege - #F8F4E3 */
             background-color: #F8F4E3;
+            /* Oculta o cursor padrão para mostrar o cursor personalizado */
+            cursor: none; 
+            overflow-x: hidden; /* Evita barra de rolagem horizontal desnecessária */
         }
         .product-image {
-            /* URL CORRIGIDA: Usei uma URL de placeholder que carrega em qualquer navegador */
-            /* A URL anterior do Pinterest não estava carregando devido a restrições de segurança */
+            /* URL de Placeholder funcionando e robusta */
             background-image: url('https://placehold.co/600x600/E9D5D0/525252?text=Sua+Imagem+de+Produto');
             background-size: cover;
             background-position: center;
@@ -26,117 +28,32 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
         }
 
-      
+        /* --- CSS PARA O NOVO CURSOR E RASTRO (Glitter Múltiplas Cores) --- */
+        .cursor-trail {
+            position: absolute;
+            pointer-events: none; /* Não interfere em cliques */
+            border-radius: 50%;
+            z-index: 9999; /* Garante que fique acima de tudo */
+            transform: translate(-50%, -50%); /* Centraliza o rastro */
         }
-            <!--LÓGICA DO GLITTER (CORRIGIDA)-->
-<div class="title">Move your cursor around to see the sparkles ✨</div>
-    <div class="cursor"></div>
-          body {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #121212;
-  cursor: none;
-  overflow: hidden;
-}
-.cursor-trail {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  pointer-events: none;
-  border-radius: 50%;
-
-}
-
-.cursor {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 10;
-}
-.title {
-  color: white;
-  font-size: 1.5rem;
-  text-align: center;
-}
-        const cursor = document.querySelector(".cursor");
-const colors = [
-  "#FFD700",
-  "#FF8C00",
-  "#FF4500",
-  "#FB68EE",
-  "#FF69B4",
-  "#00CED1"
-];
-document.addEventListener("mousemove", (e) => {
-  cursor.style.left = e.clientX + "px";
-  cursor.style.top = e.clientY + "px";
-  createSparkle(e.clientX, e.clientY);
-});
-
-function createSparkle(x, y) {
-  const sparkle = document.createElement("div");
-  sparkle.classList.add("cursor-trail");
-
-  const color = colors[Math.floor(Math.random() * colors.length)];
-  const size = Math.random() * 15 + 5;
-  const angle = Math.random() * Math.PI * 2;
-  const distance = Math.random() * 50 + 10;
-
-  sparkle.style.backgroundColor = color;
-  sparkle.style.boxShadow = `0 0 10px ${color}`;
-  sparkle.style.width = `${size}px`;
-  sparkle.style.height = `${size}px`;
-  sparkle.style.left = `${x}px`;
-  sparkle.style.top = `${y}px`;
-
-  document.body.appendChild(sparkle);
-
-
-  sparkle.animate(
-    [
-      {
-        opacity: 1,
-        transform: "translate(-50%,-50%) scale(1)"
-      },
-      {
-        opacity: 0,
-        transform: `translate(calc(-50% + ${
-          Math.cos(angle) * distance
-        }px), calc(-50% + ${Math.sin(angle) * distance}px)) scale(0)`
-      }
-    ],
-    {
-      duration: 1000,
-      easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-      fill: "forwards"
-    }
-  );
-  setTimeout(() => {
-    sparkle.remove();
-  }, 1000);
-}
-
-document.addEventListener(
-  "touchmove",
-  (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    cursor.style.left = touch.clientX + "px";
-    cursor.style.top = touch.clientY + "px";
-    createSparkle(touch.clientX, touch.clientY);
-  },
-  { passive: false }
-);
+        
+        .cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(255, 192, 203, 0.6); /* Rosa claro com transparência */
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9998; /* Fica abaixo do rastro (trail) */
+            transition: transform 0.05s ease-out; /* Suaviza o movimento do cursor principal */
+        }
     </style>
 </head>
 <body class="min-h-screen">
+    
+    <!-- Elemento do cursor principal (necessário para o JS) -->
+    <div class="cursor"></div>
 
     <!-- Cabeçalho (Navegação Intuitiva) -->
     <header class="bg-white shadow-md sticky top-0 z-10">
@@ -299,7 +216,7 @@ document.addEventListener(
             
             // Função principal de cálculo (Simulação da Transparência Logística)
             function calcularFrete() {
-                const cep = cepInput.value.replace(/\D/g, ''); // Remove todos os não-dígitos
+                const cep = cepInput.value.replace(/\D/g, ''); 
                 resultadoDiv.classList.add('hidden');
                 messageBox.classList.add('hidden');
 
@@ -308,9 +225,7 @@ document.addEventListener(
                     return;
                 }
 
-                // Obtém os 5 primeiros dígitos do CEP de destino
                 const destinationCepPrefix = cep.substring(0, 5);
-                
                 const zoneId = ZONE_MAP[destinationCepPrefix] || 3;
 
                 let valorFrete;
@@ -347,10 +262,91 @@ document.addEventListener(
                 }
             });
 
+            // ----------------------------------------------------
+            // LÓGICA DO CURSOR DE BRILHO (BASEADO NO TUTORIAL)
+            // ----------------------------------------------------
+            
+            const cursor = document.querySelector(".cursor");
+            const colors = [
+                "#FFD700", // Ouro
+                "#FF8C00", // Laranja Escuro
+                "#FF4500", // Laranja Avermelhado
+                "#FB68EE", // Rosa Vívido
+                "#FF69B4", // Rosa Choque
+                "#00CED1" // Azul Turquesa
+            ];
+
+            // Atualiza a posição do cursor e cria o rastro
+            document.addEventListener("mousemove", (e) => {
+                // Move o cursor principal
+                cursor.style.left = e.clientX + "px";
+                cursor.style.top = e.clientY + "px";
+                
+                // Cria o brilho no rastro
+                createSparkle(e.clientX, e.clientY);
+            });
+
+            function createSparkle(x, y) {
+                const sparkle = document.createElement("div");
+                sparkle.classList.add("cursor-trail");
+
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 15 + 5; // Tamanho entre 5px e 20px
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 50 + 10; // Distância do espalhamento
+
+                sparkle.style.backgroundColor = color;
+                sparkle.style.boxShadow = `0 0 10px ${color}`;
+                sparkle.style.width = `${size}px`;
+                sparkle.style.height = `${size}px`;
+                
+                // Posição inicial do rastro
+                sparkle.style.left = `${x}px`;
+                sparkle.style.top = `${y}px`;
+
+                document.body.appendChild(sparkle);
+
+                // Usa Web Animation API (animate) para criar a transição suave
+                sparkle.animate(
+                    [
+                        {
+                            opacity: 1,
+                            transform: "translate(-50%,-50%) scale(1)" // Começa no centro, tamanho normal
+                        },
+                        {
+                            opacity: 0,
+                            // Move para uma direção aleatória e diminui (scale(0))
+                            transform: `translate(calc(-50% + ${
+                                Math.cos(angle) * distance
+                            }px), calc(-50% + ${Math.sin(angle) * distance}px)) scale(0)`
+                        }
+                    ],
+                    {
+                        duration: 1000, // 1 segundo
+                        easing: "cubic-bezier(0.4, 0, 0.2, 1)", // Efeito de aceleração/desaceleração
+                        fill: "forwards"
+                    }
+                );
+                
+                // Remove o elemento após a animação para limpar o DOM
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 1000);
+            }
+
+            // Suporte a eventos touch (para dispositivos móveis)
+            document.addEventListener(
+                "touchmove",
+                (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    cursor.style.left = touch.clientX + "px";
+                    cursor.style.top = touch.clientY + "px";
+                    createSparkle(touch.clientX, touch.clientY);
+                },
+                { passive: false }
+            );
+        });
     </script>
 </body>
 </html>
-
-
-
-
