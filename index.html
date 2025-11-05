@@ -250,18 +250,21 @@
                 }
             });
 
-            // ----------------------------------------------------
-            // LÓGICA DO GLITTER (CORRIGIDA E COMPLETA)
+                       // ----------------------------------------------------
+            // LÓGICA DO GLITTER (CORRIGIDA)
             // ----------------------------------------------------
             
             let lastX = 0;
             let lastY = 0;
             let count = 0;
+            const DENSITY_THRESHOLD = 20;
 
             document.addEventListener('mousemove', (e) => {
+                // Usa e.clientX e e.clientY para obter as coordenadas do cursor na janela
                 const distance = Math.sqrt(Math.pow(e.clientX - lastX, 2) + Math.pow(e.clientY - lastY, 2));
                 
-                if (distance > 20 || count % 5 === 0) {
+                // Cria um brilho se o mouse moveu uma distância mínima OU a cada 5 frames (para movimento lento)
+                if (distance > DENSITY_THRESHOLD || count % 5 === 0) {
                     createSparkle(e.clientX, e.clientY);
                     lastX = e.clientX;
                     lastY = e.clientY;
@@ -273,34 +276,34 @@
                 const sparkle = document.createElement('div');
                 sparkle.classList.add('glitter-sparkle');
 
-                const size = Math.random() * 3 + 1; 
+                const size = Math.random() * 5 + 2; // Tamanho entre 2px e 7px
                 sparkle.style.width = `${size}px`;
                 sparkle.style.height = `${size}px`;
                 
-                const offsetX = Math.random() * 10 - 5; 
-                const offsetY = Math.random() * 10 - 5; 
-                
-                sparkle.style.left = `${x + offsetX}px`;
-                sparkle.style.top = `${y + offsetY}px`;
+                // Define a posição inicial centralizada no cursor
+                sparkle.style.left = `${x - size / 2}px`;
+                sparkle.style.top = `${y - size / 2}px`;
                 
                 document.body.appendChild(sparkle);
 
-                // Força o reflow antes de aplicar a transição
-                sparkle.offsetHeight; 
+                // Movimento aleatório de fade out
+                const moveX = Math.random() * 40 - 20; // Movimento horizontal entre -20px e +20px
+                const moveY = Math.random() * 40 - 20; // Movimento vertical entre -20px e +20px
 
-                const finalX = x + Math.random() * 40 - 20; 
-                const finalY = y + Math.random() * 40 - 20;
-                
-                // Aplica a animação
-                sparkle.style.transform = `translate(${finalX - (x + offsetX)}px, ${finalY - (y + offsetY)}px) scale(0.1)`;
+                // Força o navegador a reconhecer o elemento antes da transição (garante que funciona)
+                void sparkle.offsetWidth;
+
+                // Aplica o estado final: move para uma posição aleatória, diminui (scale) e some (opacity: 0)
+                sparkle.style.transform = `translate(${moveX}px, ${moveY}px) scale(0.1)`;
                 sparkle.style.opacity = '0';
                 
-                // Remove após a animação
+                // Remove o elemento do DOM após a conclusão da animação
                 setTimeout(() => {
                     sparkle.remove();
-                }, 800);
+                }, 800); 
             }
         });
     </script>
 </body>
 </html>
+
