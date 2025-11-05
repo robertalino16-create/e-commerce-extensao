@@ -10,10 +10,13 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f4e3; /* light gray background */
+            /* Cor Nude Bege - #F8F4E3 */
+            background-color: #F8F4E3;
         }
         .product-image {
-            background-image: url('https://i.pinimg.com/originals/08/25/08/082508f6cd8d7615b8b10f263489abf9.jpg');
+            /* URL CORRIGIDA: Usei uma URL de placeholder que carrega em qualquer navegador */
+            /* A URL anterior do Pinterest não estava carregando devido a restrições de segurança */
+            background-image: url('https://placehold.co/600x600/E9D5D0/525252?text=Sua+Imagem+de+Produto');
             background-size: cover;
             background-position: center;
         }
@@ -22,6 +25,18 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
         }
+
+        /* --- CSS CORRIGIDO PARA O EFEITO GLITTER --- */
+        .glitter-sparkle {
+            position: absolute;
+            pointer-events: none; /* Garante que não interfira nos cliques ou seleção de texto */
+            background: radial-gradient(circle, #FFD700 10%, #FFB6C1 90%); /* Cor (Ouro e rosa claro) */
+            border-radius: 50%;
+            opacity: 1;
+            /* Define o tempo de vida e a suavidade do movimento/desaparecimento */
+            transition: transform 0.8s ease-out, opacity 0.8s ease-out; 
+            z-index: 9999; /* Garante que as partículas fiquem acima de outros elementos */
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -29,7 +44,7 @@
     <!-- Cabeçalho (Navegação Intuitiva) -->
     <header class="bg-white shadow-md sticky top-0 z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-indigo-600">Moda Local</h1>
+            <h1 class="text-3xl font-bold text-indigo-600">Cida Moda</h1>
             <nav class="hidden md:flex space-x-6">
                 <a href="#" class="text-gray-600 hover:text-indigo-600 font-semibold transition duration-150">Início</a>
                 <a href="#" class="text-gray-600 hover:text-indigo-600 font-semibold transition duration-150">Produtos</a>
@@ -67,7 +82,7 @@
                         </select>
                     </label>
                     <button class="btn-primary bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 self-end">
-                        Adicionar ao carrinho
+                        Adicionar ao Carrinho
                     </button>
                 </div>
             </div>
@@ -79,7 +94,7 @@
                 </h3>
                 
                 <p class="text-sm text-gray-500">
-                    Local de envio da Loja: <span class="font-bold text-indigo-600">57082-095</span>.
+                    Local de envio da Loja (CEP Base): <span class="font-bold text-indigo-600">57082-095</span>.
                 </p>
 
                 <div id="frete-message-box" class="hidden p-4 rounded-lg text-sm" role="alert"></div>
@@ -148,8 +163,8 @@
     <!-- Rodapé -->
     <footer class="mt-12 bg-gray-800 text-white p-8">
         <div class="max-w-7xl mx-auto text-center">
-            <p>&copy; 2025 Moda Local - Protótipo de E-commerce (Projeto de Extensão)</p>
-            <p class="text-sm mt-2">Contato: (99) 99999-9999 | E-mail: contato@modalocal.com.br</p>
+            <p>&copy; 2025 Cida Moda - Protótipo de E-commerce (Projeto de Extensão)</p>
+            <p class="text-sm mt-2">Contato: (99) 99999-9999 | E-mail: contato@cidade.com.br</p>
         </div>
     </footer>
 
@@ -166,15 +181,12 @@
             const LOJA_CEP_PREFIX = '57082';
 
             // Mapeamento de Zonas (Simulação de Distância Geográfica)
-            // Estes CEPs simulam diferentes distâncias do 57082-095 (Maceió)
             const ZONE_MAP = {
-                // Zona 1: Curta Distância (0-5km)
-                '57082': 1, // Mesmo prefixo (muito perto)
-                '57083': 1, // Bairro Adjacente
-                // Zona 2: Média Distância (5-12km)
-                '57072': 2, // Bairro mais afastado
-                '57035': 2, // Litoral (Ponta Verde, distante)
-                '57051': 2, // Bairro Intermediário
+                '57082': 1, 
+                '57083': 1, 
+                '57072': 2, 
+                '57035': 2, 
+                '57051': 2, 
             };
 
             // Função para exibir mensagem de erro/sucesso
@@ -202,7 +214,6 @@
                 // Obtém os 5 primeiros dígitos do CEP de destino
                 const destinationCepPrefix = cep.substring(0, 5);
                 
-                // Determina a zona, ou assume Zona 3 (fora do raio) se não estiver mapeado
                 const zoneId = ZONE_MAP[destinationCepPrefix] || 3;
 
                 let valorFrete;
@@ -210,12 +221,10 @@
 
                 if (zoneId === 1) {
                     // Zona 1: Curta Distância (0-5km)
-                    // Preço: R$ 10,00 - R$ 15,00 (Média moto-entrega local)
                     valorFrete = (10 + Math.random() * 5).toFixed(2);
                     prazoEntrega = '1 a 2 horas (Rápida)';
                 } else if (zoneId === 2) {
                     // Zona 2: Média Distância (5-12km)
-                    // Preço: R$ 16,00 - R$ 25,00 (Média moto-entrega)
                     valorFrete = (16 + Math.random() * 9).toFixed(2);
                     prazoEntrega = '2 a 3 horas (Padrão)';
                 } else {
@@ -224,41 +233,74 @@
                     return;
                 }
 
-                // Exibe o resultado na tela (Transparência)
+                // Exibe o resultado
                 valorSpan.textContent = `R$ ${valorFrete.replace('.', ',')}`;
                 prazoSpan.textContent = prazoEntrega;
                 resultadoDiv.classList.remove('hidden');
                 showMessage('Cálculo realizado com sucesso! Veja o valor simulado abaixo.', 'success');
             }
 
-            // Atribui o evento ao botão
+            // Atribui o evento ao botão de cálculo
             calcularBtn.addEventListener('click', calcularFrete);
 
-            // Opcional: Permite calcular frete ao pressionar Enter no campo CEP
+            // Permite calcular frete ao pressionar Enter
             cepInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     calcularFrete();
                 }
             });
+
+            // ----------------------------------------------------
+            // LÓGICA DO GLITTER (CORRIGIDA E COMPLETA)
+            // ----------------------------------------------------
+            
+            let lastX = 0;
+            let lastY = 0;
+            let count = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                const distance = Math.sqrt(Math.pow(e.clientX - lastX, 2) + Math.pow(e.clientY - lastY, 2));
+                
+                if (distance > 20 || count % 5 === 0) {
+                    createSparkle(e.clientX, e.clientY);
+                    lastX = e.clientX;
+                    lastY = e.clientY;
+                }
+                count++;
+            });
+
+            function createSparkle(x, y) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('glitter-sparkle');
+
+                const size = Math.random() * 3 + 1; 
+                sparkle.style.width = `${size}px`;
+                sparkle.style.height = `${size}px`;
+                
+                const offsetX = Math.random() * 10 - 5; 
+                const offsetY = Math.random() * 10 - 5; 
+                
+                sparkle.style.left = `${x + offsetX}px`;
+                sparkle.style.top = `${y + offsetY}px`;
+                
+                document.body.appendChild(sparkle);
+
+                // Força o reflow antes de aplicar a transição
+                sparkle.offsetHeight; 
+
+                const finalX = x + Math.random() * 40 - 20; 
+                const finalY = y + Math.random() * 40 - 20;
+                
+                // Aplica a animação
+                sparkle.style.transform = `translate(${finalX - (x + offsetX)}px, ${finalY - (y + offsetY)}px) scale(0.1)`;
+                sparkle.style.opacity = '0';
+                
+                // Remove após a animação
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 800);
+            }
         });
-        
-        /* --- CSS para o Efeito Glitter no Cursor --- */
-.glitter-sparkle {
-    position: absolute;
-    pointer-events: none; /* Garante que não interfira nos cliques ou seleção de texto */
-    background: radial-gradient(circle, #FFD700 10%, #FFB6C1 90%); /* Cor (Ouro e rosa claro) */
-    border-radius: 50%;
-    opacity: 1;
-    /* Define o tempo de vida e a suavidade do movimento/desaparecimento */
-    transition: transform 0.8s ease-out, opacity 0.8s ease-out; 
-    z-index: 9999; /* Garante que as partículas fiquem acima de outros elementos */
-    
     </script>
 </body>
-
 </html>
-
-
-
-
-
